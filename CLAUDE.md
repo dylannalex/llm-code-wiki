@@ -11,13 +11,13 @@ directs analysis — you do all the summarizing, cross-referencing, filing, and 
 > follow. Co-evolve it with the human as conventions improve.
 
 > **Getting started?** See [[README]] for the quickstart. The first things to customize are the
-> Purpose section below, the `scope:` axis values, and [[repos]] (the repo registry).
+> Purpose section below, the `scope:` tag values, and [[repos]] (the repo registry).
 
 ## Purpose & scope
 
 <!-- CUSTOMIZE: one paragraph describing what THIS knowledge base is for and its center of
 gravity — e.g. "Understanding our payments platform, using competitor repo X as a reference,"
-or "Studying the Linux kernel networking stack." Keep it pointed; it guides every ingest. -->
+or "Studying the Linux kernel networking stack." Keep it pointed; it guides what you add. -->
 
 A knowledge base centered on **<your primary system/codebase>**, with **<reference codebases>**
 as a reference library, plus personal learnings (tech, vocabulary, concepts worth pinning down).
@@ -79,7 +79,7 @@ catalog *across* repos.)
 ### Page categories — when to use which
 - **repositories/`<repo>`/** — what a specific codebase is and how it works. `overview.md` is
   the map (structure, entry points, stack, key modules). Split a section into its own sub-page
-  only when it gets long *or* you keep querying it (lazy splitting — don't pre-split).
+  only when it gets long *or* you keep querying it (split only when needed — don't pre-split).
 - **concepts/** — an *idea* or mechanism that may span codebases, or cross-repo system synthesis
   ("the platform end to end" stitching several repos).
 - **contracts/** — how service A exposes data for service B to consume (schemas, boundaries).
@@ -98,7 +98,7 @@ relevant repo pages.
 ```yaml
 ---
 title: <human title>
-scope: <value>               # OPTIONAL partition axis — see below. Omit if you don't need it.
+scope: <value>               # OPTIONAL grouping tag — see below. Omit if you don't need it.
 type: <category>             # repository | concept | contract | comparison | glossary | project | decision
 sources:
   - source_type: repository  # repository | file | web | tracker | ai-agent-session
@@ -111,9 +111,10 @@ tags: [..]
 ---
 ```
 
-### The `scope:` axis (optional, customize)
-A single partition dimension for knowledge that lives in distinct "worlds." Pick values that fit
-your domain and list them here, or drop `scope:` entirely if everything is one world. Examples:
+### The `scope:` tag (optional, customize)
+An optional tag that groups knowledge living in distinct "worlds" (so you can later filter to just
+one). Pick values that fit your domain and list them here, or drop `scope:` entirely if everything
+is one world. Examples:
 - `ours` / `theirs` (your code vs a reference codebase)
 - `v1` / `v2` (before/after a rewrite)
 - `frontend` / `backend`
@@ -132,11 +133,25 @@ you the "show me only X" view via Obsidian's filters when you want it.
   - `ai-agent-session` → optional `raw/ai-agent-sessions/<date>-<slug>.md` snapshot.
 - Use **`sha256`** for hashable local files (repository, file) — precise staleness.
   Use **`pulled`** (date) for live/remote sources that can't be hashed.
-- `source_type` is explicit (never parsed from `path`) so `lint` knows re-hash vs warn-stale.
+- `source_type` is explicit (never parsed from `path`) so the health check knows re-hash vs warn-stale.
 
 ## Workflows
 
-### The interaction loop (applies to BOTH ingest and research/query)
+### Recognize what the user wants (they won't use exact commands)
+There are no magic command words. The user expresses intent in everyday language — match on the
+**intent**, not specific phrasing:
+- **Map / read a repo** ("scan", "read", "look at", "summarize", "research", "explore" a repo, or
+  just a question about one) → the *read a repo* flow below.
+- **Add a source** ("add", "import", "capture", "save this article/ticket/note") → summarize and
+  file the source.
+- **Answer a question** ("how does X work?", "where is Y?", "compare A and B") → the *answer a
+  question* flow.
+- **Save a session insight** ("file this", "save this", "write that down") → file to
+  `decisions/`/`concepts/`.
+- **Check the wiki** ("check", "audit", "health-check", "what's out of date?") → the *health
+  check* flow.
+
+### The interaction loop (applies to BOTH adding knowledge and answering questions)
 1. **Understand.** Build genuine understanding first. Explore the relevant code/sources
    yourself; **ask the human only when there is genuine ambiguity the sources cannot resolve.**
    If the code already answers it, stay silent and go to step 2.
@@ -146,18 +161,18 @@ you the "show me only X" view via Obsidian's filters when you want it.
    Escape hatch: if the human says "just file it," collapse step 1 for trivial sources.
 4. **Write.** Apply the maintenance protocol below.
 
-### Ingest scope (code repos)
-- When a repo is **first added**: do one light **seed sweep** — structure, entry points, stack,
-  top-level modules — to create `repositories/<repo>/overview.md` (breadth, not depth) + stamp
-  sources. Add the repo to [[repos]] if missing.
-- After that, ingests are **topic-slice driven**: deep-read only the slice relevant to the
-  question/design, and write/update the pages it touches.
+### Reading in a repo (code repos)
+- When a repo is **read for the first time**: do one light **first-pass map** — structure, entry
+  points, stack, top-level modules — to create `repositories/<repo>/overview.md` (breadth, not
+  depth) + stamp sources. Add the repo to [[repos]] if missing.
+- After that, stay **question-driven**: deep-read only the part relevant to the question/design,
+  and write/update the pages it touches.
 
 ### Maintenance protocol (on every write)
 1. Write/update the page(s).
 2. Update the page's **folder `index.md`** entry (or the repo's `overview.md` for drill-downs).
 3. Update root `index.md` **only** if a new folder/category or new repo appears.
-4. Append a `log.md` entry: `## [YYYY-MM-DD] <op> | <title>` where op ∈ {ingest, query, lint, file}.
+4. Append a `log.md` entry: `## [YYYY-MM-DD] <op> | <title>` where op ∈ {add, query, check, file}.
 5. Maintain `[[wikilinks]]` to related pages in both directions where it makes sense.
 
 ### Filing insights from a session
@@ -171,7 +186,7 @@ Navigate top-down: read root `index.md` → pick a folder → read its `index.md
 drill into the 1-2 relevant pages. Answer with citations to wiki pages. If the answer is itself
 valuable synthesis, offer to file it back as a new page.
 
-### Lint (run when asked)
+### Health check (run when asked)
 - **Staleness:** for each page, run the OS-appropriate hash script (`scripts/hash.sh` on
   macOS/Linux, `scripts/hash.ps1` on Windows) as `<script> <resolved-file> <recorded-sha256>` on
   every `repository`/`file` source. On `STALE`/`MISSING`, set `status: stale` and report. For

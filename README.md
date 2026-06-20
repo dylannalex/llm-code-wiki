@@ -7,6 +7,27 @@ markdown pages, keeps them cross-referenced, and flags pages that go stale when 
 Works on **macOS, Linux, and Windows** with no dependencies (uses your shell's built-in hashing),
 and it's **dead simple to set up** — run one command and you're up and running in a few minutes.
 
+## The big picture
+
+```mermaid
+flowchart LR
+    you(["You"])
+    prompt["Your prompt (plain English)<br/>• 'scan the auth repo'<br/>• 'how does X work?'<br/>• 'save this'<br/>• 'check the wiki'"]
+    code[("Your code<br/>repositories")]
+    llm{{"LLM agent"}}
+    wiki[["wiki/<br/>interlinked<br/>markdown pages"]]
+
+    you -- "types" --> prompt
+    prompt --> llm
+    code -- "reads (never copies)" --> llm
+    llm -- "writes & cross-links" --> wiki
+    wiki -- "answers your questions" --> you
+    code -. "code changes →<br/>pages flagged stale" .-> wiki
+```
+
+**In one sentence:** you point the agent at code and ask questions; it reads the code, writes a
+cross-linked wiki of what it learned, and flags pages as stale when the underlying code changes.
+
 ## Who is this for?
 
 Anyone who accumulates knowledge across one or more codebases and is tired of re-deriving it every
@@ -36,12 +57,17 @@ That's it. (Prefer to do it by hand? Edit the Purpose + `scope:` in `CLAUDE.md` 
 
 ## Daily use — just talk to your agent
 
-| You say | It does |
-|---|---|
-| "seed-sweep `<repo>`" | maps a repo into `wiki/repositories/<repo>/overview.md` |
-| ask any question | answers from the wiki, offers to file the synthesis |
-| "file this" | saves a session's conclusions to `wiki/decisions/` or `wiki/concepts/` |
-| "lint the wiki" | flags stale pages (via hashing), orphans, and gaps |
+There are **no special commands or exact wording** to memorize — ask in plain English and the
+agent recognizes what you want. The phrasings below are just examples; say it however feels
+natural.
+
+| When you want to… | Say something like… | The agent… |
+|---|---|---|
+| Map out a repo | "scan / read / summarize `<repo>`" | reads it and writes `wiki/repositories/<repo>/overview.md` |
+| Answer a question | "how does X work?" | answers from the wiki, offers to save the synthesis |
+| Add another source | "add / import this article (or ticket)" | summarizes it and files it, cross-linked |
+| Save what you figured out | "save this" / "file this" | writes it to `wiki/decisions/` or `wiki/concepts/` |
+| Check the wiki is up to date | "check / audit the wiki" | flags out-of-date pages (via hashing), orphans, and gaps |
 
 ## How it works
 

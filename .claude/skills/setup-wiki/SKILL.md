@@ -1,6 +1,6 @@
 ---
 name: setup-wiki
-description: "USER-INVOKED ONLY (via /setup-wiki). One-time setup for a fresh LLM Code Wiki created from the template: verifies the hash script on this OS, then customizes Purpose, the scope axis, and the repo registry. Do NOT run this automatically or as part of any other task — only when the user explicitly types /setup-wiki."
+description: "USER-INVOKED ONLY (via /setup-wiki). One-time setup for a fresh LLM Code Wiki created from the template: verifies the hash script on this OS, then customizes Purpose, the scope tag, and the repo registry. Do NOT run this automatically or as part of any other task — only when the user explicitly types /setup-wiki."
 disable-model-invocation: true
 ---
 
@@ -53,11 +53,11 @@ gravity?** (e.g. "our payments platform, with competitor repo X as reference," o
 kernel networking stack"). Then rewrite the `## Purpose & scope` section of `CLAUDE.md`, replacing
 the `<!-- CUSTOMIZE -->` placeholder with a pointed one-paragraph description.
 
-## 3. Set the `scope:` axis
+## 3. Set the `scope:` tag
 
 Ask whether their knowledge splits into distinct "worlds" worth tagging. Offer common shapes:
 `ours`/`theirs`, `v1`/`v2`, `frontend`/`backend`, or **none** (single world). Update the
-`### The scope: axis` section of `CLAUDE.md` to list the chosen values (or note that `scope:` is
+`### The scope: tag` section of `CLAUDE.md` to list the chosen values (or note that `scope:` is
 unused and may be omitted from frontmatter).
 
 ## 4. Fill the repo registry
@@ -122,7 +122,8 @@ Ask whether to:
 
 ## 7. Done
 
-Summarize what changed, and tell the user the everyday commands: "seed-sweep `<repo>`" to ingest,
-ask questions to research, "file this" to save session insights, "lint the wiki" to health-check.
+Summarize what changed, and reassure the user there are no commands to memorize — just ask in
+plain English. Give examples: "scan / read `<repo>`" to map a repo, ask any question to research,
+"save this" to keep a session insight, "check the wiki" to health-check for out-of-date pages.
 Suggest opening the **`wiki/`** folder as the Obsidian vault. If a global `CLAUDE.md` nudge or
 skill was added, remind them to restart Claude Code.
