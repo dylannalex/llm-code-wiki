@@ -8,7 +8,7 @@ How resolution works: a page cites `path: my-service/src/foo.ts` → look up `my
 `../path/to/my-service` → read/hash `../path/to/my-service/src/foo.ts`.
 
 <!-- CUSTOMIZE: replace the example rows with your repos. The `scope` column is optional;
-use it to tag which "world" a repo belongs to (see the scope axis in CLAUDE.md). -->
+use it to tag which "world" a repo belongs to (see the scope axis in constitution.md). -->
 
 | name        | scope  | path                       | notes              |
 |-------------|--------|----------------------------|--------------------|

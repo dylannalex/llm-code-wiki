@@ -50,10 +50,11 @@ synthesized, hand-curated (by the LLM) wiki.
 
 1. Copy this template to a new folder and open it with your LLM agent (e.g. Claude Code).
 2. Run **`/setup-wiki`** — it verifies hashing on your OS, then asks you a few things (what the
-   wiki is about, your optional `scope:` tags, which repos to track, and whether to access it from
-   any repo via a global `/wiki` command) and fills everything in.
+   wiki is about, your optional `scope:` tags, and which repos to track) and fills everything in.
+   It also installs a global `wiki` skill so you can reach the wiki from any repo.
 
-That's it. (Prefer to do it by hand? Edit the Purpose + `scope:` in `CLAUDE.md` and fill `repos.md`.)
+That's it. (Prefer to do it by hand? Edit the Purpose + `scope:` in `constitution.md`, fill
+`repos.md`, and install the skill from `skills/wiki/SKILL.md` — see `/setup-wiki` step 5.)
 
 ## Daily use — just talk to your agent
 
@@ -71,10 +72,11 @@ natural.
 
 ## How it works
 
-- The knowledge lives in **`wiki/`** (open Obsidian there); the machinery (`CLAUDE.md`,
-  `repos.md`, `scripts/`) stays at the repo root, out of the vault.
-- **`CLAUDE.md`** is the schema — structure, page format, and workflows. Your agent reads it every
-  session, so the operating manual lives in the repo itself.
+- The knowledge lives in **`wiki/`** (open Obsidian there); the machinery (`constitution.md`,
+  `repos.md`, `scripts/`, `skills/`) stays at the repo root, out of the vault.
+- **`constitution.md`** is the schema — structure, page format, and workflows; the single source
+  of truth. The global **`wiki`** skill reads it on every invocation (so the wiki works from any
+  repo), and a short root **`CLAUDE.md`** redirects to it when you work inside this repo.
 - Sources are **referenced + content-hashed, never copied**, so staleness is detectable.
 - **`repos.md`** maps a repo name to wherever you cloned it.
 - It's just a git repo of markdown — version history and Obsidian's graph view come free.

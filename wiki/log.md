@@ -7,5 +7,5 @@ Quick peek at recent activity: `grep "^## \[" log.md | tail -5`
 
 ## [2025-01-01] file | Wiki initialized from template
 
-Created from the LLM Code Wiki template. Next steps: customize the Purpose in `../CLAUDE.md`, set
+Created from the LLM Code Wiki template. Next steps: customize the Purpose in `../constitution.md`, set
 the `scope:` values, and fill in `../repos.md`. See [[decisions/example-decision]] for the page format.

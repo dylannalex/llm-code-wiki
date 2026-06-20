@@ -12,8 +12,8 @@ the user only what you genuinely cannot infer. Work through the steps in order.
 
 ## 0. Confirm this is a fresh template
 
-If `repos.md` already lists real repos and the Purpose in `CLAUDE.md` is already filled, this wiki
-is probably already set up — confirm with the user before changing anything.
+If `repos.md` already lists real repos and the Purpose in `constitution.md` is already filled, this
+wiki is probably already set up — confirm with the user before changing anything.
 
 ## 1. Verify hashing on this OS
 
@@ -50,15 +50,15 @@ Report the four verdicts (hash / FRESH / STALE / MISSING). If the tool is missin
 
 Ask the user, in one or two questions: **What is this knowledge base about — its center of
 gravity?** (e.g. "our payments platform, with competitor repo X as reference," or "the Linux
-kernel networking stack"). Then rewrite the `## Purpose & scope` section of `CLAUDE.md`, replacing
-the `<!-- CUSTOMIZE -->` placeholder with a pointed one-paragraph description.
+kernel networking stack"). Then rewrite the `## Purpose & scope` section of `constitution.md`,
+replacing the `<!-- CUSTOMIZE -->` placeholder with a pointed one-paragraph description.
 
 ## 3. Set the `scope:` tag
 
 Ask whether their knowledge splits into distinct "worlds" worth tagging. Offer common shapes:
 `ours`/`theirs`, `v1`/`v2`, `frontend`/`backend`, or **none** (single world). Update the
-`### The scope: tag` section of `CLAUDE.md` to list the chosen values (or note that `scope:` is
-unused and may be omitted from frontmatter).
+`### The scope: tag` section of `constitution.md` to list the chosen values (or note that `scope:`
+is unused and may be omitted from frontmatter).
 
 ## 4. Fill the repo registry
 
@@ -70,45 +70,32 @@ For each repo the user wants to track, add a row: `name | scope | path | notes`.
 paths from the repo root** (where `repos.md` lives), e.g. `../some-repo`. Remove the example rows.
 Confirm the table with the user.
 
-## 5. Choose how you'll access the wiki
+## 5. Install the global `wiki` skill
 
-Ask the user: **"Do you want to reach this wiki from ANY repo, or only when you're working inside
-this repo?"**
+This wiki is meant to be reached from **any repo**, so install the user-level `wiki` skill. It's a
+thin entry point: its body just reads `constitution.md` (the single source of truth) and anchors
+all paths to this wiki. The repo ships a version-controlled template at `skills/wiki/SKILL.md`;
+install a copy with this wiki's absolute path baked in:
 
-- **From any repo (global access).** Install a thin, user-level `/wiki` skill that points at this
-  wiki's absolute path, so you can query or file into the wiki while coding elsewhere. Do this:
-  1. Get this wiki's absolute path: `pwd` (call it `<WIKI_PATH>`).
-  2. Create `~/.claude/skills/wiki/` and write `~/.claude/skills/wiki/SKILL.md` with the content
-     below, substituting `<WIKI_PATH>` literally (no trailing slash):
+```bash
+WIKI_PATH="$(pwd)"                                   # no trailing slash
+mkdir -p ~/.claude/skills/wiki
+sed "s|<WIKI_PATH>|$WIKI_PATH|g" skills/wiki/SKILL.md > ~/.claude/skills/wiki/SKILL.md
+```
 
-     ```
-     ---
-     name: wiki
-     description: "USER-INVOKED ONLY (via /wiki). Access the LLM Code Wiki at <WIKI_PATH> from any repo — query it or file insights into it. On invocation, read <WIKI_PATH>/CLAUDE.md and follow it, anchoring ALL paths to the wiki root. Do NOT auto-trigger; only run when the user types /wiki."
-     ---
+Then:
+1. Confirm the install path printed back the real absolute path (no leftover `<WIKI_PATH>`).
+2. Tell the user to **restart Claude Code**, after which the `wiki` skill is available everywhere
+   and auto-triggers when they talk about the wiki (mapping a repo into it, asking a question,
+   filing an insight, checking staleness) — no command to memorize.
+3. Remind them: when they want to track a new source repo, add it to `<WIKI_PATH>/repos.md`.
 
-     # Access the LLM Code Wiki
+> Re-run this step (or just re-run the `sed` line) whenever the wiki moves to a new path, or when
+> `skills/wiki/SKILL.md` itself changes. Day-to-day schema edits go in `constitution.md`, which the
+> installed skill reads live by absolute path — so those need no reinstall.
 
-     The wiki artifact lives at: `<WIKI_PATH>`
-
-     When invoked from anywhere:
-     1. Read `<WIKI_PATH>/CLAUDE.md` — it is the single source of truth for how this wiki works.
-        Follow it. (Do not duplicate its rules here; always defer to it.)
-     2. Anchor **every** wiki operation to `<WIKI_PATH>` as the base directory: index reads, page
-        paths, `repos.md` path resolution, and the hash-script staleness checks all resolve
-        relative to `<WIKI_PATH>`, NOT the repo you happen to be invoked from.
-     3. Follow the wiki interaction loop: understand -> propose -> confirm/deny -> write. Never
-        write without the user's confirmation.
-     4. The repo you are currently in may be a SOURCE for the wiki (cite it via `repos.md`), but
-        the wiki itself is always at `<WIKI_PATH>`.
-     ```
-  3. Tell the user to **restart Claude Code**, then `/wiki` is available everywhere.
-  4. If this wiki repo isn't in `repos.md` of itself and the user codes in repos not yet
-     registered, remind them new source repos must be added to `<WIKI_PATH>/repos.md`.
-
-- **Only inside this repo (in-repo, default).** Do nothing — the repo's own `CLAUDE.md`
-  auto-loads whenever an agent works in this folder, so the wiki is fully usable here with no
-  global install. (They can re-run `/setup-wiki` later to switch to global access.)
+**Working inside this repo** needs no install: the short `CLAUDE.md` here auto-loads and redirects
+to `constitution.md`.
 
 ## 6. Tidy up (offer, don't force)
 
@@ -118,12 +105,12 @@ Ask whether to:
 - Re-initialize git history (`rm -rf .git && git init`) so the wiki starts with its own history
   instead of the template's. **Confirm explicitly before running any `rm`.**
 - If the user uses a global "research cache" skill that auto-triggers, remind them this wiki
-  replaces it here (see the *Optional integrations* note in `CLAUDE.md`).
+  replaces it here (see the *Optional integrations* note in `constitution.md`).
 
 ## 7. Done
 
 Summarize what changed, and reassure the user there are no commands to memorize — just ask in
 plain English. Give examples: "scan / read `<repo>`" to map a repo, ask any question to research,
 "save this" to keep a session insight, "check the wiki" to health-check for out-of-date pages.
-Suggest opening the **`wiki/`** folder as the Obsidian vault. If a global `CLAUDE.md` nudge or
-skill was added, remind them to restart Claude Code.
+Suggest opening the **`wiki/`** folder as the Obsidian vault. Remind them to restart Claude Code
+so the global `wiki` skill loads.

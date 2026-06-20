@@ -1,8 +1,8 @@
 # Wiki Index
 
 Root catalog. Lists the **categories**, not individual pages — drill into each folder's own
-`index.md` to find pages. The schema (`../CLAUDE.md`) and repo registry (`../repos.md`) live at
-the repo root, outside this vault.
+`index.md` to find pages. The schema (`../constitution.md`) and repo registry (`../repos.md`) live
+at the repo root, outside this vault.
 
 ## Categories
 
