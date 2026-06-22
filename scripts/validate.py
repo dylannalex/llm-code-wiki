@@ -10,6 +10,7 @@ wiki/log.md) it checks:
   - required fields and their allowed values
   - each source's locator resolves and (for hashable local files) matches its
     recorded sha256; live sources have a recent `pulled` date
+  - no `repository` source points at a repo listed under '## Ignored' in repos.md
   - the page is referenced from the appropriate index / overview
 
 See constitution.md for the authoritative schema.
@@ -276,6 +277,45 @@ def parse_repos(repos_path):
     return mapping
 
 
+def parse_ignored_repos(repos_path):
+    """Parse the '## Ignored (do not track)' table of repos.md into a set of names.
+
+    Reads only the section between the '## Ignored' heading and the next '##'
+    heading (columns: name | reason). Returns an empty set if the file or the
+    section is absent.
+    """
+    ignored = set()
+    if not os.path.isfile(repos_path):
+        return ignored
+
+    with open(repos_path, "r", encoding="utf-8") as fh:
+        text = fh.read()
+
+    start = re.search(r"^##\s+Ignored\b", text, re.MULTILINE)
+    if not start:
+        return ignored
+    text = text[start.end():]
+    nxt = re.search(r"^##\s+", text, re.MULTILINE)
+    if nxt:
+        text = text[: nxt.start()]
+
+    header_seen = False
+    for line in text.splitlines():
+        line = line.strip()
+        if not line.startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip("|").split("|")]
+        if all(set(c) <= set("-: ") and c for c in cells):
+            header_seen = True
+            continue
+        if not header_seen:
+            continue
+        name = cells[0] if cells else ""
+        if name and not name.startswith("_"):
+            ignored.add(name)
+    return ignored
+
+
 # ----------------------------------------------------------------------------
 # Hashing
 # ----------------------------------------------------------------------------
@@ -366,7 +406,7 @@ def is_knowledge_page(relpath):
 
 
 def validate_sources(rep, relpath, sources, repo_root, vault_root,
-                     repos_map, today, no_repo_hash):
+                     repos_map, ignored_repos, today, no_repo_hash):
     """Validate the `sources` list of a single page."""
     for idx, src in enumerate(sources):
         if not isinstance(src, dict):
@@ -394,9 +434,15 @@ def validate_sources(rep, relpath, sources, repo_root, vault_root,
             if not sha:
                 rep.error(relpath, "%s (repository) missing 'sha256'" % label)
                 continue
+            repo_name, _, in_repo = path.partition("/")
+            if repo_name in ignored_repos:
+                rep.error(relpath,
+                          "%s references ignored repo '%s' (listed under "
+                          "'## Ignored' in repos.md — the wiki must not track it)"
+                          % (label, repo_name))
+                continue
             if no_repo_hash:
                 continue  # only presence is checked in this mode
-            repo_name, _, in_repo = path.partition("/")
             if not in_repo:
                 rep.error(relpath,
                           "%s path '%s' is not '<repo>/<in-repo-path>'"
@@ -524,7 +570,9 @@ def collect_pages(vault_root):
 def validate(repo_root, no_repo_hash):
     """Run all checks; return (Reporter, pages_checked)."""
     vault_root = os.path.join(repo_root, "wiki")
-    repos_map = parse_repos(os.path.join(repo_root, "repos.md"))
+    repos_path = os.path.join(repo_root, "repos.md")
+    repos_map = parse_repos(repos_path)
+    ignored_repos = parse_ignored_repos(repos_path)
     today = datetime.date.today()
     rep = Reporter()
     index_cache = {}
@@ -565,7 +613,7 @@ def validate(repo_root, no_repo_hash):
         sources = fm.get("sources")
         if isinstance(sources, list) and sources:
             validate_sources(rep, rel_path, sources, repo_root, vault_root,
-                             repos_map, today, no_repo_hash)
+                             repos_map, ignored_repos, today, no_repo_hash)
 
         validate_index_presence(rep, rel_path, vault_root, index_cache)
 

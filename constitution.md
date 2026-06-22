@@ -182,9 +182,11 @@ There are no magic command words. The user expresses intent in everyday language
 4. **Write.** Apply the maintenance protocol below.
 
 ### Reading in a repo (code repos)
-- When a repo is **read for the first time**: do one light **first-pass map** — structure, entry
-  points, stack, top-level modules — to create `repositories/<repo>/overview.md` (breadth, not
-  depth) + stamp sources. Add the repo to [[repos]] if missing.
+- **First, check the ignore list.** [[repos]] has an "Ignored (do not track)" section. If the repo
+  is listed there, do **not** map, scan, or register it — tell the user it's ignored and stop.
+- When a repo is **read for the first time** (and not ignored): do one light **first-pass map** —
+  structure, entry points, stack, top-level modules — to create `repositories/<repo>/overview.md`
+  (breadth, not depth) + stamp sources. Add the repo to [[repos]] if missing.
 - After that, stay **question-driven**: deep-read only the part relevant to the question/design,
   and write/update the pages it touches.
 
@@ -224,7 +226,8 @@ valuable synthesis, offer to file it back as a new page.
 
 An **optional** automated validator (`scripts/validate.py`, requires Python 3) complements this
 manual check: it enforces frontmatter schema, source freshness (re-hashing `repository`/`file`
-sources), and index presence, and can run as a pre-commit hook or in CI. See `scripts/validate.py`;
+sources), index presence, and the ignore list (rejects any page citing a repo listed under
+"## Ignored" in [[repos]]), and can run as a pre-commit hook or in CI. See `scripts/validate.py`;
 enable it via `/setup-wiki`.
 
 When the user asks for **usage stats / metrics** ("how big is the wiki?", "how much have I used

@@ -22,3 +22,14 @@ Repos you intend to study but haven't cloned. Move a row up once it's on disk.
 | name | scope |
 |------|-------|
 | _none_ | |
+
+## Ignored (do not track)
+
+Repos the wiki should **never** scan, map, or register — even if encountered while working from
+them. The agent checks this list before a first-pass map or registry add, and `scripts/validate.py`
+**deterministically rejects** any page whose `repository` source points at a name listed here. Use
+it for throwaway scratch repos, vendored mirrors, or repos out of scope for this wiki.
+
+| name | reason |
+|------|--------|
+| _none_ | |

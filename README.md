@@ -7,6 +7,19 @@ markdown pages, keeps them cross-referenced, and flags pages that go stale when 
 Works on **macOS, Linux, and Windows** with no dependencies (uses your shell's built-in hashing),
 and it's **dead simple to set up** — run one command and you're up and running in a few minutes.
 
+## Setup (2 minutes)
+
+1. Get the template — either clone the repo or download it as a zip:
+   - Clone: `git clone https://github.com/dylannalex/llm-code-wiki.git`
+   - Or download: [main.zip](https://github.com/dylannalex/llm-code-wiki/archive/refs/heads/main.zip) and unzip it.
+
+   Then open the folder with your LLM agent (e.g. Claude Code).
+2. Run **`/setup-wiki`** — it verifies hashing on your OS, then asks you a few things (what the
+   wiki is about, your optional `scope:` tags, and which repos to track) and fills everything in.
+   It also installs a global `wiki` skill so you can reach the wiki from any repo.
+
+That's it.
+
 ## The big picture
 
 ```mermaid
@@ -46,19 +59,6 @@ It's a good fit if your knowledge is rooted in **code that changes over time** (
 handled). It's overkill if you just need a few static notes — and it's not a RAG index; it's a
 synthesized, hand-curated (by the LLM) wiki.
 
-## Setup (2 minutes)
-
-1. Get the template — either clone the repo or download it as a zip:
-   - Clone: `git clone https://github.com/dylannalex/llm-code-wiki.git`
-   - Or download: [main.zip](https://github.com/dylannalex/llm-code-wiki/archive/refs/heads/main.zip) and unzip it.
-
-   Then open the folder with your LLM agent (e.g. Claude Code).
-2. Run **`/setup-wiki`** — it verifies hashing on your OS, then asks you a few things (what the
-   wiki is about, your optional `scope:` tags, and which repos to track) and fills everything in.
-   It also installs a global `wiki` skill so you can reach the wiki from any repo.
-
-That's it.
-
 ## Daily use — just talk to your agent
 
 There are **no special commands or exact wording** to memorize — ask in plain English and the
@@ -73,6 +73,7 @@ natural.
 | Save what you figured out | "save this" / "file this" | writes it to `wiki/decisions/` or `wiki/concepts/` |
 | Check the wiki is up to date | "check / audit the wiki" | flags out-of-date pages (via hashing), orphans, and gaps |
 | See how much you've used it | "show wiki stats" | runs a local script: pages, sources, activity, orphans, size |
+| Ignore a repo | "don't track `<repo>`" | adds it to the `## Ignored` list in `repos.md`; it's never scanned, and pages citing it are rejected |
 
 ## How it works
 
