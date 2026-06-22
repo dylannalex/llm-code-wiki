@@ -1,18 +1,24 @@
 # Skills in this repo
 
-There are two skills, deliberately kept in **different folders** because they activate in
+There are three skills, deliberately kept in **different folders** because they activate in
 opposite places.
 
 | Skill | Location | Auto-loads in this repo? | Purpose |
 |---|---|---|---|
 | `setup-wiki` | `.claude/skills/setup-wiki/` | **Yes** | One-time `/setup-wiki` wizard, run from inside this repo |
 | `wiki` | `skills/wiki/` (plain dir) | **No** | Version-controlled *template* for the global skill |
+| `deep-research` | `skills/deep-research/` (plain dir) | **No** | Template for the global multi-agent research workflow |
 
 `.claude/skills/` is what Claude Code auto-discovers when you work inside this repo. `setup-wiki`
-belongs there because you invoke it here. `wiki` is deliberately parked **outside** `.claude/` so
-it does **not** auto-load in-repo: it's a template containing a `<WIKI_PATH>` placeholder that is
-invalid until setup substitutes the real path. If it lived in `.claude/skills/`, it would
-auto-register here and could fire with a broken path. Don't "tidy up" by moving them together.
+belongs there because you invoke it here. `wiki` and `deep-research` are deliberately parked
+**outside** `.claude/` so they do **not** auto-load in-repo: they are templates containing a
+`<WIKI_PATH>` placeholder that is invalid until setup substitutes the real path. If they lived in
+`.claude/skills/`, they would auto-register here and could fire with a broken path. Don't "tidy up"
+by moving them together.
+
+`deep-research` is the repeatable, topic-agnostic version of a deep research pass: it grills the
+user on scope first, fans out **Sonnet** sub-agents to read, and uses a single **Opus 4.8[1m]**
+sub-agent to write the findings into the wiki. `/setup-wiki` installs it alongside `wiki`.
 
 ## How `/setup-wiki` installs the global `wiki` skill
 

@@ -83,8 +83,16 @@ mkdir -p ~/.claude/skills/wiki
 sed "s|<WIKI_PATH>|$WIKI_PATH|g" skills/wiki/SKILL.md > ~/.claude/skills/wiki/SKILL.md
 ```
 
+Also install the `deep-research` skill (same template pattern) so the multi-agent research workflow
+— grill the user, read with Sonnet, write with Opus 4.8[1m] — is reachable from any repo:
+
+```bash
+mkdir -p ~/.claude/skills/deep-research
+sed "s|<WIKI_PATH>|$WIKI_PATH|g" skills/deep-research/SKILL.md > ~/.claude/skills/deep-research/SKILL.md
+```
+
 Then:
-1. Confirm the install path printed back the real absolute path (no leftover `<WIKI_PATH>`).
+1. Confirm both install paths printed back the real absolute path (no leftover `<WIKI_PATH>`).
 2. Tell the user to **restart Claude Code**, after which the `wiki` skill is available everywhere
    and auto-triggers when they talk about the wiki (mapping a repo into it, asking a question,
    filing an insight, checking staleness) — no command to memorize.
