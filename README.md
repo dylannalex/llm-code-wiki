@@ -48,7 +48,11 @@ synthesized, hand-curated (by the LLM) wiki.
 
 ## Setup (2 minutes)
 
-1. Copy this template to a new folder and open it with your LLM agent (e.g. Claude Code).
+1. Get the template — either clone the repo or download it as a zip:
+   - Clone: `git clone https://github.com/dylannalex/llm-code-wiki.git`
+   - Or download: [main.zip](https://github.com/dylannalex/llm-code-wiki/archive/refs/heads/main.zip) and unzip it.
+
+   Then open the folder with your LLM agent (e.g. Claude Code).
 2. Run **`/setup-wiki`** — it verifies hashing on your OS, then asks you a few things (what the
    wiki is about, your optional `scope:` tags, and which repos to track) and fills everything in.
    It also installs a global `wiki` skill so you can reach the wiki from any repo.
