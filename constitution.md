@@ -218,8 +218,3 @@ valuable synthesis, offer to file it back as a new page.
 - **A global "research cache" skill.** If your LLM setup has a separate research-cache mechanism
   that runs by default, disable it *for this wiki* — this wiki replaces it (and absorbs its
   per-file hashing for staleness). The two would otherwise duplicate.
-
-## Future improvements
-- **qmd** (github.com/tobi/qmd) — local hybrid BM25/vector search + MCP server over the wiki
-  markdown. Add when index-based navigation gets slow (~hundreds of pages). Indexes the same
-  files; nothing to migrate.
