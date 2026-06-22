@@ -1,5 +1,15 @@
+# Worked example — a decision page
+
+> **This is a format reference, not wiki content.** It lives in `docs/` (outside the `wiki/`
+> vault) precisely so the agent never mistakes it for a real decision. Use it as a template for
+> what a `wiki/decisions/<slug>.md` page should look like. Notice: the frontmatter cites its
+> sources (a code file with a `sha256`, a web article and a session with `pulled` dates), the
+> body **leads with the decision**, and it records the **rejected alternatives and why** — that
+> "why" is the value a decision page preserves.
+
+```markdown
 ---
-title: Example — choose a message-queue approach
+title: Choose a message-queue approach
 scope: ours
 type: decision
 sources:
@@ -14,15 +24,10 @@ sources:
     pulled: 2025-01-01
 status: current
 updated: 2025-01-01
-tags: [example, queue, messaging]
+tags: [queue, messaging]
 ---
 
-# Example — choose a message-queue approach
-
-> **This is a worked example** showing the shape of a decision page. Delete it once you've
-> filed a real one. Notice: frontmatter cites its sources (a code file with a `sha256`, a web
-> article and a session with `pulled` dates), the body leads with the decision, and it records
-> the **rejected alternatives and why** — that "why" is the value a decision page preserves.
+# Choose a message-queue approach
 
 ## Decision
 
@@ -48,3 +53,4 @@ pick how consumers handle duplicates. See [[concepts/event-pipeline]] and
 - Every consumer must implement dedup against a stable key — capture the pattern in
   [[concepts/event-pipeline]].
 - Reconsider option 2 if idempotency logic becomes duplicated or error-prone.
+```

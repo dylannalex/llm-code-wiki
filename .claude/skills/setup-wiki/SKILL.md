@@ -100,7 +100,8 @@ to `constitution.md`.
 ## 6. Tidy up (offer, don't force)
 
 Ask whether to:
-- Delete `wiki/decisions/example-decision.md` and its `wiki/decisions/index.md` row (format demo).
+- The vault ships empty; the decision-page format demo lives in `docs/example-decision-page.md`
+  (keep it as a reference, or delete it once the user is comfortable with the format).
 - Reset `wiki/log.md` to a fresh first entry dated today.
 - Re-initialize git history (`rm -rf .git && git init`) so the wiki starts with its own history
   instead of the template's. **Confirm explicitly before running any `rm`.**

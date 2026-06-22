@@ -81,4 +81,4 @@ natural.
 - **`repos.md`** maps a repo name to wherever you cloned it.
 - It's just a git repo of markdown — version history and Obsidian's graph view come free.
 
-See `wiki/decisions/example-decision.md` for the page format (delete it once you're rolling).
+See `docs/example-decision-page.md` for a worked example of the page format.
