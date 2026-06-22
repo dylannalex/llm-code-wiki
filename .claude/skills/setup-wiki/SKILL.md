@@ -97,6 +97,28 @@ Then:
 **Working inside this repo** needs no install: the short `CLAUDE.md` here auto-loads and redirects
 to `constitution.md`.
 
+## 5b. Enable validation (optional — requires Python 3)
+
+The repo ships an opt-in validator (`scripts/validate.py`) that enforces the frontmatter schema,
+source freshness (re-hashing), and index presence. If the user doesn't want it, skip this step —
+the validator files lie dormant and are safe to delete.
+
+If they do want it:
+1. Confirm Python 3 is available: `command -v python3`. If absent, tell the user to install
+   Python 3 or skip this step.
+2. Smoke-test it on the fresh vault and confirm it passes:
+   ```bash
+   python3 scripts/validate.py            # should exit 0 (ok)
+   ```
+3. Activate the local pre-commit hook so commits that fail validation are blocked:
+   ```bash
+   chmod +x scripts/hooks/pre-commit
+   git config core.hooksPath scripts/hooks
+   ```
+4. A CI workflow ships at `.github/workflows/validate.yml` (runs
+   `python3 scripts/validate.py --no-repo-hash`, since CI can't see sibling code repos). Keep it if
+   using GitHub Actions; delete it otherwise.
+
 ## 6. Tidy up (offer, don't force)
 
 Ask whether to:

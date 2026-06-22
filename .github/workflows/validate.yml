@@ -1,0 +1,21 @@
+name: Validate wiki
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      # CI cannot see the user's sibling code repos, so repository-source
+      # hashing is skipped. Schema, index presence, and in-repo file-source
+      # hashing still run.
+      - name: Validate wiki
+        run: python3 scripts/validate.py --no-repo-hash

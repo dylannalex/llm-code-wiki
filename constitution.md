@@ -58,6 +58,9 @@ repo root (machinery — keep out of the vault):
   repos.md           repo registry: maps repo NAME -> on-disk path + scope
   scripts/hash.sh    staleness checker (macOS/Linux)
   scripts/hash.ps1   staleness checker (Windows) — same CLI contract
+  scripts/validate.py  optional wiki integrity validator (Python 3; schema + freshness + index)
+  scripts/hooks/     git hooks (e.g. pre-commit) that run the validator — opt-in
+  .github/workflows/ CI that runs the validator — opt-in
   skills/wiki/       version-controlled template for the global `wiki` skill (installed by setup)
   .claude/skills/    e.g. setup-wiki (in-repo setup helper)
 
@@ -191,6 +194,13 @@ There are no magic command words. The user expresses intent in everyday language
 4. Append a `log.md` entry: `## [YYYY-MM-DD] <op> | <title>` where op ∈ {add, query, check, file}.
 5. Maintain `[[wikilinks]]` to related pages in both directions where it makes sense.
 
+### Concurrency (shared / multi-session use)
+The wiki is a git repo of markdown. `log.md` is append-only and effectively conflict-free, but
+`index.md` files are edited in place. For shared/multi-user or multi-session use: pull before
+writing, make small frequent commits, and resolve `index.md`/`log.md` conflicts by **union** —
+keep all lines / both entries rather than overwriting; never discard another writer's index entry.
+Single-user use needs none of this.
+
 ### Filing insights from a session
 Valuable conclusions from a working session shouldn't die in chat history. When the human says
 "file this," run the write step: usually a `decisions/` page (design conclusions + rejected
@@ -210,6 +220,11 @@ valuable synthesis, offer to file it back as a new page.
 - Orphans (no inbound links), missing cross-references, concepts mentioned but lacking a page,
   contradictions between pages, data gaps fillable by web search.
 - Suggest new questions to investigate and new sources to find.
+
+An **optional** automated validator (`scripts/validate.py`, requires Python 3) complements this
+manual check: it enforces frontmatter schema, source freshness (re-hashing `repository`/`file`
+sources), and index presence, and can run as a pre-commit hook or in CI. See `scripts/validate.py`;
+enable it via `/setup-wiki`.
 
 ## Optional integrations
 - **Issue tracker (`source_type: tracker`).** If your tracker has an API/MCP server (Jira,

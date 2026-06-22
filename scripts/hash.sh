@@ -3,7 +3,7 @@
 # Borrowed from the research-memory skill.
 #   hash.sh <file>                 -> prints the file's sha256
 #   hash.sh <file> <recorded_hash> -> prints FRESH | STALE | MISSING
-# Used by the `lint` workflow to detect when a page's cited source files changed.
+# Used by the `health check` workflow to detect when a page's cited source files changed.
 set -euo pipefail
 
 file="${1:-}"

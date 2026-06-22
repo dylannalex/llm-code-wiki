@@ -80,5 +80,7 @@ natural.
 - Sources are **referenced + content-hashed, never copied**, so staleness is detectable.
 - **`repos.md`** maps a repo name to wherever you cloned it.
 - It's just a git repo of markdown — version history and Obsidian's graph view come free.
+- An **optional** Python-based validator (plus pre-commit hook / CI) can enforce the frontmatter
+  schema and staleness checks — enable it via `/setup-wiki`.
 
 See `docs/example-decision-page.md` for a worked example of the page format.

@@ -1,0 +1,30 @@
+#!/bin/sh
+# LLM Code Wiki — pre-commit hook (wiki integrity validation).
+#
+# This hook is INERT until you activate it. Git only runs hooks from the
+# configured hooks path, which by default is .git/hooks (not this file).
+# To activate (done optionally by /setup-wiki):
+#
+#     git config core.hooksPath scripts/hooks
+#
+# Once active, it runs scripts/validate.py before each commit and blocks the
+# commit if the wiki has schema/index/staleness errors. Works under git-bash
+# on Windows too (POSIX sh).
+
+ROOT=$(git rev-parse --show-toplevel) || exit 0
+
+if ! command -v python3 >/dev/null 2>&1; then
+    echo "wiki: skipping validation — python3 is not installed."
+    echo "wiki: install Python 3 to enable the pre-commit wiki integrity check."
+    exit 0
+fi
+
+python3 "$ROOT/scripts/validate.py" "$ROOT"
+status=$?
+
+if [ "$status" -ne 0 ]; then
+    echo "Wiki validation failed — fix the issues above, or bypass with: git commit --no-verify"
+    exit 1
+fi
+
+exit 0
