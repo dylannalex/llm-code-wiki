@@ -72,17 +72,55 @@ natural.
 
 ## How it works
 
-- The knowledge lives in **`wiki/`** (open Obsidian there); the machinery (`constitution.md`,
-  `repos.md`, `scripts/`, `skills/`) stays at the repo root, out of the vault.
-- **`constitution.md`** is the schema — structure, page format, and workflows; the single source
-  of truth. The global **`wiki`** skill reads it on every invocation (so the wiki works from any
-  repo), and a short root **`CLAUDE.md`** redirects to it when you work inside this repo.
-- Sources are **referenced + content-hashed, never copied**, so staleness is detectable.
-- **`repos.md`** maps a repo name to wherever you cloned it.
-- It's just a git repo of markdown — version history and Obsidian's graph view come free.
-- An **optional** Python-based validator (plus pre-commit hook / CI) can enforce the frontmatter
-  schema and staleness checks — enable it via `/setup-wiki`.
-- An **optional** `scripts/metrics.py` reports local usage stats (pages, sources, activity from
-  `log.md`, orphans, size) to a gitignored `metrics/` folder — just run it or ask "show wiki stats".
+Two zones: **machinery** at the repo root, **knowledge** in `wiki/`.
+
+```mermaid
+flowchart TB
+    skill["wiki skill<br/>(reachable from any repo)"]
+
+    subgraph root["repo root — machinery"]
+        const["constitution.md<br/>the schema · single source of truth"]
+        repos["repos.md<br/>repo name → on-disk path"]
+        scripts["scripts/<br/>hashing · validate · metrics"]
+    end
+
+    subgraph vault["wiki/ — the knowledge (Obsidian vault)"]
+        pages["interlinked markdown pages<br/>repositories · concepts · decisions · …"]
+    end
+
+    code[("your code<br/>repositories")]
+
+    skill -- "reads on every call" --> const
+    const -- "defines structure of" --> pages
+    code -- "referenced + hashed,<br/>never copied" --> pages
+    repos -. "resolves names in" .-> pages
+    code -. "code changes →<br/>hash mismatch →<br/>page flagged stale" .-> scripts
+    scripts -. "marks" .-> pages
+```
+
+- **`constitution.md`** holds the whole schema. The global **`wiki`** skill reads it on every call
+  (so the wiki works from any repo); a short root **`CLAUDE.md`** redirects here when you work inside.
+- Sources are **referenced + content-hashed, never copied** — so staleness is detectable, not silent.
+- **`repos.md`** maps each repo name to wherever you cloned it.
+- It's just git + markdown — version history and Obsidian's graph view come free.
+- **Optional** (enable via `/setup-wiki`): a Python validator (pre-commit / CI) enforces schema and
+  freshness; `scripts/metrics.py` reports local usage stats to a gitignored `metrics/` folder.
+
+### What lives in `wiki/`
+
+| Folder | Holds |
+|---|---|
+| `repositories/` | One subfolder per repo; `overview.md` maps its structure and is that repo's index. |
+| `concepts/` | Cross-cutting mechanisms and cross-repo system synthesis. |
+| `contracts/` | Service-to-service interfaces and boundaries (optional; multi-service domains). |
+| `comparisons/` | Two implementations side by side — ours vs theirs, v1 vs v2, fork vs upstream. |
+| `glossary/` | Short definitions of a term or technology. |
+| `projects/` | Initiative status, decisions, and blockers — fed by your tracker + notes. |
+| `decisions/` | ADR-style records: what was chosen, the alternatives, and why. |
+| `sources/` | On-demand summaries of substantial `raw/` originals. |
+| `raw/` | Immutable non-code originals — articles, notes, tracker snapshots, sessions. |
+
+Plus `index.md` (root catalog) and `log.md` (append-only activity log). Every folder has its own
+`index.md` except `repositories/`, where each repo's `overview.md` serves as the index.
 
 See `docs/example-decision-page.md` for a worked example of the page format.
