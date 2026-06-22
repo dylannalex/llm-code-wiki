@@ -53,8 +53,7 @@ synthesized, hand-curated (by the LLM) wiki.
    wiki is about, your optional `scope:` tags, and which repos to track) and fills everything in.
    It also installs a global `wiki` skill so you can reach the wiki from any repo.
 
-That's it. (Prefer to do it by hand? Edit the Purpose + `scope:` in `constitution.md`, fill
-`repos.md`, and install the skill from `skills/wiki/SKILL.md` — see `/setup-wiki` step 5.)
+That's it.
 
 ## Daily use — just talk to your agent
 
@@ -69,6 +68,7 @@ natural.
 | Add another source | "add / import this article (or ticket)" | summarizes it and files it, cross-linked |
 | Save what you figured out | "save this" / "file this" | writes it to `wiki/decisions/` or `wiki/concepts/` |
 | Check the wiki is up to date | "check / audit the wiki" | flags out-of-date pages (via hashing), orphans, and gaps |
+| See how much you've used it | "show wiki stats" | runs a local script: pages, sources, activity, orphans, size |
 
 ## How it works
 
@@ -82,5 +82,7 @@ natural.
 - It's just a git repo of markdown — version history and Obsidian's graph view come free.
 - An **optional** Python-based validator (plus pre-commit hook / CI) can enforce the frontmatter
   schema and staleness checks — enable it via `/setup-wiki`.
+- An **optional** `scripts/metrics.py` reports local usage stats (pages, sources, activity from
+  `log.md`, orphans, size) to a gitignored `metrics/` folder — just run it or ask "show wiki stats".
 
 See `docs/example-decision-page.md` for a worked example of the page format.

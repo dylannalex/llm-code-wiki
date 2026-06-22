@@ -59,6 +59,7 @@ repo root (machinery — keep out of the vault):
   scripts/hash.sh    staleness checker (macOS/Linux)
   scripts/hash.ps1   staleness checker (Windows) — same CLI contract
   scripts/validate.py  optional wiki integrity validator (Python 3; schema + freshness + index)
+  scripts/metrics.py   optional local usage metrics (Python 3; content + activity stats -> metrics/)
   scripts/hooks/     git hooks (e.g. pre-commit) that run the validator — opt-in
   .github/workflows/ CI that runs the validator — opt-in
   skills/wiki/       version-controlled template for the global `wiki` skill (installed by setup)
@@ -225,6 +226,13 @@ An **optional** automated validator (`scripts/validate.py`, requires Python 3) c
 manual check: it enforces frontmatter schema, source freshness (re-hashing `repository`/`file`
 sources), and index presence, and can run as a pre-commit hook or in CI. See `scripts/validate.py`;
 enable it via `/setup-wiki`.
+
+When the user asks for **usage stats / metrics** ("how big is the wiki?", "how much have I used
+it?"), run the **optional** `scripts/metrics.py` (Python 3, stdlib). It derives content stats
+(pages per category/status, sources, wikilinks, orphans, size) from the vault and activity stats
+(operations by type, recent windows) from `log.md`, writes `metrics/latest.json` + an append-only
+`metrics/history.jsonl`, and prints a summary with deltas since the last run. `metrics/` is
+gitignored (local-only).
 
 ## Optional integrations
 - **Issue tracker (`source_type: tracker`).** If your tracker has an API/MCP server (Jira,
