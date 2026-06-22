@@ -16,7 +16,8 @@ and it's **dead simple to set up** — run one command and you're up and running
    Then open the folder with your LLM agent (e.g. Claude Code).
 2. Run **`/setup-wiki`** — it verifies hashing on your OS, then asks you a few things (what the
    wiki is about, your optional `scope:` tags, and which repos to track) and fills everything in.
-   It also installs a global `wiki` skill so you can reach the wiki from any repo.
+   It also installs two global skills so you can reach the wiki from any repo: **`wiki`** (the
+   everyday entry point) and **`deep-research`** (a multi-agent research pass — see below).
 
 That's it.
 
@@ -73,7 +74,8 @@ natural.
 | Save what you figured out | "save this" / "file this" | writes it to `wiki/decisions/` or `wiki/concepts/` |
 | Check the wiki is up to date | "check / audit the wiki" | flags out-of-date pages (via hashing), orphans, and gaps |
 | See how much you've used it | "show wiki stats" | runs a local script: pages, sources, activity, orphans, size |
-| Ignore a repo | "don't track `<repo>`" | adds it to the `## Ignored` list in `repos.md`; it's never scanned, and pages citing it are rejected |
+| Ignore a repo | "don't track `<repo>`" | adds it to the ignored list in `repos.md`; it's never scanned, and pages citing it are rejected |
+| Research a theme across repos | "deep research / map every X across these repos and write it up" | runs the **`deep-research`** skill: grills you on scope, fans out parallel reader agents, then files cross-linked pages |
 
 ## How it works
 
