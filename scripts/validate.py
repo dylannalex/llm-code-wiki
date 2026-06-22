@@ -296,8 +296,9 @@ def sha256_file(path):
 def index_references(index_text):
     """Return a set of referenced names (lowercased) from an index page.
 
-    Collects [[wikilink]] targets (basename, no extension/anchor/alias) and
-    bare filename mentions, so matching can be lenient.
+    Collects [[wikilink]] targets and explicit `.md` filename mentions (e.g.
+    a markdown link like `[label](foo.md)`). Bare prose words are NOT counted,
+    so a page is only considered indexed when something actually links to it.
     """
     refs = set()
     if index_text is None:
@@ -314,11 +315,10 @@ def index_references(index_text):
             base = base[:-3]
         refs.add(base.lower())
 
-    # Bare filename mentions like `foo.md` or `foo`.
-    for token in re.findall(r"[A-Za-z0-9._\-/]+", index_text):
-        name = os.path.basename(token)
-        if name.endswith(".md"):
-            name = name[:-3]
+    # Explicit filename mentions ending in `.md` (e.g. `foo.md` or
+    # `path/to/foo.md` inside a markdown link). Bare prose words are ignored.
+    for token in re.findall(r"[A-Za-z0-9._\-/]+\.md", index_text):
+        name = os.path.basename(token)[:-3]
         if name:
             refs.add(name.lower())
 
